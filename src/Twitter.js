@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TwitterAPI from 'twitter';
 import { takeRight } from 'lodash';
+import Tweets from './Tweets';
 
 // open -a Google\ Chrome --args --disable-web-security --user-data-dir
 const client = new TwitterAPI({
@@ -18,7 +19,6 @@ class Twitter extends Component {
     const { numberOfTweets = 10 } = this.props;
     this.stream = client.stream('statuses/filter', { track: 'twitter' });
     this.stream.on('data', tweet => {
-      console.log(tweet.text);
       const tweets = [...this.state.tweets, tweet];
       const maxTweets = takeRight(tweets, numberOfTweets);
       this.setState({
@@ -36,13 +36,9 @@ class Twitter extends Component {
   render() {
     return (
       <div className="Twitter">
-        <p>
-          Twitter
-          <pre>{JSON.stringify(this.state.tweets, null, 2)}</pre>
-        </p>
+        <Tweets tweets={this.state.tweets} />
       </div>
     );
   }
 }
-
 export default Twitter;
